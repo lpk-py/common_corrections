@@ -1,0 +1,125 @@
+run
+where
+quit
+run
+where
+p c
+quit
+break readraydynfile.f:48
+run
+p nray
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+s
+n
+n
+run
+p nray
+p iray
+p iar
+n
+n
+p dummy
+n
+n
+p c
+p q0
+p slen
+n
+n
+p slen
+n
+n
+n
+n
+n
+n
+break 54
+c
+p slen
+n
+n
+n
+n
+n
+p iar
+n
+n
+n
+n
+n
+n
+p h11
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+c
+break 69
+c
+clear
+c
+clear
+c
+s
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+n
+q
+break readraydynfile.f:71
+run
+q

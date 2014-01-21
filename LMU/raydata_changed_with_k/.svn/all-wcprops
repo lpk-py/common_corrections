@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/svn/ffinversion/!svn/ver/3/INVERSION/Programs/raydata
+END
+selectISC.f
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/ffinversion/!svn/ver/3/INVERSION/Programs/raydata/selectISC.f
+END
+azdel.f
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/ffinversion/!svn/ver/3/INVERSION/Programs/raydata/azdel.f
+END
+raytable.f
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/ffinversion/!svn/ver/3/INVERSION/Programs/raydata/raytable.f
+END
+ellip.f
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/ffinversion/!svn/ver/3/INVERSION/Programs/raydata/ellip.f
+END
+raydata.f
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/ffinversion/!svn/ver/3/INVERSION/Programs/raydata/raydata.f
+END
+raydyntrace.f
+K 25
+svn:wc:ra_dav:version-url
+V 68
+/svn/ffinversion/!svn/ver/3/INVERSION/Programs/raydata/raydyntrace.f
+END
+raytracesubs.f
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/ffinversion/!svn/ver/3/INVERSION/Programs/raydata/raytracesubs.f
+END
+README
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/ffinversion/!svn/ver/3/INVERSION/Programs/raydata/README
+END

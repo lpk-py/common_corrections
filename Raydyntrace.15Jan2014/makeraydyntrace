@@ -1,0 +1,7 @@
+echo "Compiling raydyntrace code..."
+gfortran -o raydyntrace raydyntrace.f raytracesubs.f azdel.f refl.f90
+echo "DONE"
+
+echo "Copy raydyntrace to TEST dir..."
+cp raydyntrace TEST
+echo "DONE"
