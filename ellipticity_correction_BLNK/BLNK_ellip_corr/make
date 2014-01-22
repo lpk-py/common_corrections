@@ -1,0 +1,2 @@
+gfortran -std=legacy -o blnk_ellip ellip.f test.f90 libtau.f libsun.f
+./blnk_ellip

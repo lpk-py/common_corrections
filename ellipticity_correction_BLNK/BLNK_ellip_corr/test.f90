@@ -1,9 +1,22 @@
 PROGRAM TEST
 
+!=========================================
+! Program name: TEST
+! Goal: run and test BLNK ellipticity
+!       correction code
+!
+! Dependencies:
+! elcordir.tbl  ellip.f  libsun.f  libtau.f
+! ttlim.inc 
+!=========================================
+
+IMPLICIT NONE
+
 character(8) :: phase="Pdiff"
-real :: edist, edepth, elat, ecolat, eazim_deg, eazim, azim, tcor
+real :: degrad, edist, edepth, elat, ecolat 
+real :: eazim_deg, eazim, azim, tcor, zs
+real, dimension(2) :: usrc
 logical :: abrt
-dimension usrc(2)
 
 !degree ---> radian
 degrad = 45.0/atan(1.0)
@@ -11,8 +24,8 @@ degrad = 45.0/atan(1.0)
 ! open ellipticity correction file
 open(21,file='elcordir.tbl',access='direct',form='formatted',recl=80)
 
-!ecolat: co-latitude of the souece (in radians) ---> (90.0-latitude)*pi/180.
 elat = 0.
+!ecolat: co-latitude of the souece (in radians) ---> (90.0-latitude)*pi/180.
 ecolat = (90.0 - elat)/degrad
 call ellref(ecolat)
 
