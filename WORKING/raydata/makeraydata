@@ -1,0 +1,5 @@
+echo "compiling...."
+gfortran -std=legacy -o raydata raydata.f raytracesubs.f azdel.f
+
+echo "copying...."
+cp -v raydata TEST

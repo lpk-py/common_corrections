@@ -419,18 +419,18 @@
         
         ! compute ellipticity correction 
         ! (ADD ecorr to spherical value to get elliptical Earth time)
-        if(phase/="Pdiff") then
+        !if(phase/="Pdiff" .and. del.le.95.0) then
         call getelcor(scolatr,slonr,rcolatr,rlonr,y,nray,jsg,rseg,ktseg,
      &      kdwn,p,rayvel,rayq,ecorr)
         WRITE(*,*) "Ellipticity Correction [getelcor]: ", ecorr
         
-        else
+        !else
         ! compute ellipticity correction using BLN Kennet method
         call ellip_blnk(phase, del, sdep, scolat, az, tcor)
         WRITE(*,*) "Ellipticity Correction [BLNK-met]: ", tcor
-        ecorr = tcor
-        end if
-        !WRITE(*,*) "Difference:", abs(tcor-ecorr)/tcor*100.0, "%"
+        !ecorr = tcor
+        !end if
+        WRITE(*,*) "Difference:", abs(tcor-ecorr)/tcor*100.0, "%"
         WRITE(*,*) '==================='
 
         call hessian(y,ypq,nray,jsg,rseg,ktseg,kdwn,hmf,hmb,p,rayvel,
