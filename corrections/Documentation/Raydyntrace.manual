@@ -1,0 +1,294 @@
+program raydyntrace
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+Important: check regularly for updates of the package Raydyntrace.tar, either directly from
+http://geoweb.princeton.edu/pub/nolet or (safer, because sooner or later I'll move things) from
+http://geodynamics.org/cig/software/packages/seismo/
+
+From Dec 2008, the software is duplicated in a tar file that has the date in it,
+e.g. Breviary_software_24dec08.tar.gz, to make it easy to check on updates. Downloads from
+CIG are simply named Breviary_software.tar.gz though they are the same file.
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+INSTALLING THE PROGRAM
+
+1. Create a convenient subdirectory, e.g.:
+mkdir Rays
+
+2. Put the tar file in that directory and untar:
+tar -xvf Raydyntrace.tar
+
+3. Compile
+Has been tested under Linux and MacOS X using the g77 compiler:
+g77 -o raydyntrace raydyntrace.f raytracesubs.f azdel.f
+
+4. Test
+Subdirectory Examples has everything for a simple test:
+raydyntrace < in.examples
+
+5. Inspect the output:
+out.raydyntrace.Pshallow (one line per ray)
+raydyntrace.Pshallow (many lines, contains all dynamic ray information)
+src.shallow.Pshallow (lists events with source depths above the CRUST2.0 surface)
+
+Here is what the out file should look like:
+
+    Date N Receiver    Rlat    Rlon    Slat    Slon  Sdep    Time Elcor    t*       p
+ 1998080 1 AAK        42.64   74.49   79.89    1.86   0.0   499.5  -0.6   0.7   454.8
+ 1998080 1 AAK        42.63   74.49   79.89    1.86   0.0   499.5  -0.6   0.7   454.8
+ 1998080 1 AML        42.13   73.69   79.89    1.86   0.0   502.3  -0.6   0.7   453.4
+ 1998080 1 ANMO       34.95 -106.46   79.89    1.86   0.0   601.1  -0.6   0.8   398.3
+ 1998080 1 ANTO       39.87   32.79   79.89    1.86   0.0   471.4  -0.5   0.6   468.8
+ 1998080 1 AQU        42.35   13.40   79.89    1.86   0.0   438.8  -0.5   0.6   483.6
+ 1998080 1 ATD        11.53   42.85   79.89    1.86   0.0   679.3  -0.4   0.9   348.3
+ 1998080 1 BFO        48.33    8.33   79.89    1.86   0.0   385.8  -0.5   0.5   503.1
+ 1998080 1 BGCA        5.18   18.42   79.89    1.86   0.0   703.9  -0.4   0.9   330.7
+ 1998080 1 BGY        44.80   20.52   79.89    1.86   0.0   421.4  -0.5   0.6   490.8
+ 1998080 1 BJT        40.02  116.17   79.89    1.86   0.0   572.5  -0.6   0.8   415.1
+ 1998080 1 BNI        45.05    6.68   79.89    1.86   0.0   414.0  -0.5   0.6   493.6
+ 1998080 1 BRVK       53.06   70.28   79.89    1.86   0.0   409.8  -0.6   0.6   495.2
+ 1998080 1 BRVK       53.06   70.28   79.89    1.86   0.0   409.8  -0.6   0.6   495.2
+ 1998080 1 BZN        33.49 -116.67   79.89    1.86   0.0   621.6  -0.5   0.8   385.9
+ 1998080 1 CALA       40.11 -108.54   79.89    1.86   0.0   567.4  -0.6   0.7   418.0
+ 1998080 1 CALI       40.37 -108.57   79.89    1.86   0.0   565.7  -0.6   0.7   419.0
+
+MANUAL
+
+Raydyntrace.f does dynamic raytracing in a spherically symmetric Earth. It computes
+at the same time topographic and ellipticity corrections for arbitrary ray definitions.
+
+Before you run the program, you need (examples are provided in directory Examples):
+a. A model file (e.g. IASP91.txt)
+b. A ray definition file (e.g. Pdef)
+c. A file containing source- and receiver information for each raypath (e.g. Pshallow)
+d. Crustal model CRUST2.0 (see mahi.ucsd.edu/Gabi/rem.dir/crust/crust2.html)
+
+These files have free formats:
+
+a. Model file
+
+       Line 1: ignored
+       Line 2: ignored
+       Line 3: n (# of nodes), nic (top node in inner core), noc (top
+               node in outer core), nmoh (bottom[!] node of the crust)
+       Lines 4ff: radius, density, Vp, Vs
+
+The nodes are ordered with INCREASING radius.
+Discontinuities are indicated by two subsequent nodes
+with the same radius. Nodes closer than 0.01 km are collapsed
+into a discontinuity. However, because we use spline interpolation
+between nodes, take care with node spacing (we experienced
+a ray caught in a spline-created low velocity zone when we replaced
+an upper mantle discontinuity by a 10 km gradient - if you wish to 
+do this, space your nodes such that the spline does what you intended).
+Model units are assumed to be MKS, unless the first density
+read is less than 100, in which case km and km/s units are
+assumed. This is the same model format used in several normal
+mode codes with the exception of the addition of the moho layer
+in line 3.
+
+b. Ray definition file
+
+The ray is defined by segments and their starting radii.
+The first (source) one specifies: radius, up/down, P/S.
+For each subsequent segment: radius,refl/trans/turn,P/S
+and for the last point of the ray: (radius,5,0)). The source
+depth can be arbitrary (e.g. 6371) and will be adapted to
+reflect the real source depth for each ray in the source/receiver
+file.
+Note that a turning point separates two different segments
+(the radius is then interpreted as the MINIMUM radius for 
+the turning point).
+
+      Line 1: Descriptive line (max 72 characters)
+      Line 2: Ray mnemonic (e.g. ScP)
+      Line 3ff: Segment lines (see below)
+
+Segments are separated by either reflection, transmission, or turning
+points. If there is no wave conversion at a layer, one does not need
+to specify a transmission.
+The last segment is not a real segment but indicates the point where
+the previous segment should end (usually the surface of the Earth).
+Each segment line contains: radius (km), ray direction, wave type:
+- the radius is the starting radius of the segment, or the minimum
+  possible radius in case of a turning point,
+- the direction is coded as follows:1=down from source,0=up from source,
+  2=turning point,3=refl, 4=transmission, 5=last point of ray
+- the wave type is either 1 (P) or 2 (S). For historical reasons
+  the last wave type may be 0, in which it will be reset to the
+  same type as the last segment.
+
+Examples of ray files:
+
+P wave
+P
+6371 1 1
+3482 2 1
+6371 5 0
+
+PcS wave (note arbitrary source depth)
+PcS
+5971 1 1
+3482 3 2
+6371 5 0
+
+pPKP wave
+pPKP
+6271 0 1
+6371 3 1
+3482 4 1
+1221.5 2 1
+3482 4 1
+6371 5 0
+
+c. Source/receiver file (if using option tableflag=0)
+
+This file has the coordinates in degrees and the depth/receiver
+elevation in km. For each ray there is a line:
+Date, Source latitude, longitude, depth, Receiver latitude,
+longitude, elevation, Receiver code, kpole.
+Date is an integer up to i8, which the user can use to identify the event.
+Latitudes and longitudes are in degrees. The receiver code or name is
+a stationcode of up to 16 characters, although only 8 are preserved
+in the output file. Finally, kpole gives the number of polar crossings
+for the ray. E.g., for a shortest epicentral distance of 150 deg and kpole
+equal to 0, rays like PPP will be found that travel 150 degrees. But if kpole
+equals one, the effective distance is assumed to be 210 deg.
+
+When running the program, the user is asked for the names of these three
+files as well as for:
+- the maximum number of arrivals, if more then one, to include in the output,
+- the maximum delay that a later arrival may have to be included in the output.
+- the value of tableflag (see below)
+
+USING RAYDYNTRACE TO COMPUTE A TABLE OF RAYS
+
+Calvet and Chevrot (PEPI 153:21-31, 2005) compute a table of rays, with travel times
+and geometrical spreading factors, to avoid the paraxial approximation for core phases 
+arriving near 180 degrees epicentral distance (when the arrival is sensitive to the 
+structure over all azimuths and not just in the neighbourhood of the geometrical ray 
+path). The same may be neede for phases like PP or SS near the antipode. For this
+purpose, Raydyntrace can also be run in "table generation mode" by setting the tableflag > 0
+- the last of the screne input parameters - larger than 0. The program will then attempt 
+to create a table with rays roughly spaced at intervals of 1/tableflag degrees (e.g.
+if you set tableflag equal to 4, the rays will be spaced approximately 0.25 degree
+in epicentral distance). You should define the source depth correctly in the ray definition
+file (in contrast to the regular use of raydyntrace when the source depth is adapted to
+that listed in the raypaths file).
+For a discussion of the issue of ray sensitivity near the antipode see
+also Tian et al., J. Comp. Phys., 226:2271-2288, 2007.
+
+
+OUTPUT
+
+A summary of the computations is provided in the file out.raydyntrace.xxxx
+if xxxx is the name of the file with raypaths.
+
+The most important output file is the file with all ray information, including
+the Hessian matrix (second derivatives of travel time when one moves away
+from the minimum travel time path), summed for forward- and backwards travelling
+ray. The name of this file is raydyntrace.xxxx if xxxx is the name of the file with
+raypaths. 
+
+If you specified tableflag=0 (input from raypath file):
+-------------------------------------------------------
+
+The first few lines repeat the ray definition with comments. Directly following are,
+for each ray:
+  Line 1ff: segment number, ray direction code, latitude, longitude, radius, crustal
+          correction for CRUST2.0, elevation correction [one line per segment]
+  (repeated for each segment)
+  Line 2: idate,source lat,lon,radius, receiver lat,lon,elevation,station code
+  Line 3: arrival number, number of ray nodes, 0(zero), travel time (s, uncorrected),
+          ellipticity correction, t*, Q, slowness (rad/s)
+  Line 4ff: r,i,phi,seismic velocity at the ray node, 1/Q, H_11, H_22
+           [one line per node]
+In 1,longitude and latitude of the segment nodes are in degrees, corrections are in
+second and have to be added to the computed travel time for the 1D Earth to get
+the travel time in an elliptical Earth with a variable crust.
+In 2, units are again degrees, km.
+In 3, the arrivals are numbered in order of increasing travel time. The zero is
+for compatibility and can be ignored. The ellipticity correction and t* are in
+seconds.
+In 4, r is in km, the ray angle i and epicentral distance phi are in radians,
+the seismic velocity is in km/s, the Hessians H_11 and H_22 are in sec/km^2.
+H_11 and H_22 are the diagonal elements of the sum of the forward- and backward 
+Hessians M' and M" in Dahlen et al., 2000 (see also Nolet, 2008 or Tian et al., 2007).
+
+If you specify tableflag>0 (generating a table for interpolation):
+------------------------------------------------------------------
+
+The format of the output file differs in case tableflag>0 (table generation mode).
+The first few lines still repeat the ray definition, followed by, for every ray:
+  Line 1: a header line with pertinent information (ray nr, # of nodes, p, starting 
+          angle,Rrs,Vs,Vr,Trs)
+  Line 2: a line with column headers
+  Line 3ff: r(km), i(rad), Delta(rad), T(sec), c(km/s), q0=1/Qs, h11 and h22 (sec/km^2),
+          Rxs and Rxr (km) and length along ray (km).
+(NOTE: The version of Raydyntrace previous to Dec 2008 printed only the *forward* Hessian 
+in the case that tableflag>0, but this has been changed since then).
+
+KNOWN BUGS, ISSUES and PROBLEMS
+
+The spline interpolation may cause artificial low velocity zones if you feed the program
+a model with a very steep gradient. The resulting shadow zone(s) may be very annoying,
+and triplications will yield erratic behaviour of geometrical spreading.
+This is probably not what you intend and can be avoided by replacing the gradient by a discontinuity,
+or (but this is trickier) adding layers to force the spline to behave differently. 
+The ellipticity correction is, of course, a linearized correction with all the shortcomings of
+that. It does not very well handle large changes in seismic velocity in the crust, certainly not
+if the crustal discontinuities are displaced by ellipticity beyond the level of the next discontinuity.
+Let me know if you find a way to improve on such linearizations. Though the error may be several tenths
+of a second it is a very long wavelenght error, which should not introduce artefacts in tomographic
+interpretations beyond a contribution to angular order 2 terms.
+Christophe Zaroli noted problems with defining ocean surface reflections like pwP in case
+the background model is continental like AK135 or IASP91, even when CRUST2.0 defines an ocean
+at the reflection point. This has not yet been made possible.
+
+WHAT IF YOU DETECT A BUG?
+
+The program has not been tested on every possible phase or model so it is concievable you'll
+detect a bug we haven't seen. If you detect a bug, please:
+(1) Locate the subroutine where the problem occurs
+(2) Set jdebug>0 in that subroutine to generate a file fort.13 with debug output and recompile
+(3) Run the program again. See if you can fix it yourself if it seems evident.
+(4) Send the relevant parts of the fort.13 file, plus all in- and output files to both
+Yue Tian and Guust Nolet (ytian@princeton.edu and nolet@geoazur.unice.fr).
+(5) If you solved it, please give us your diagnosis as well.
+
+Note that we have other things to do but to help you out of problems caused by other factors
+than software bugs, so please check your input carefully before concluding you hit a snag.
+
+REFERENCES:
+
+For the theory behind the program see:
+Dahlen, F.A., S.-H. Hung and G. Nolet, Frechet kernels for finite-frequency 
+traveltimes - I. Theory, Geophys. J. Int., 141, 157-174, 2000.
+and
+Nolet, G., A Breviary for Seismic Tomography, Cambridge Univ. Press, 2008.
+( http://www.cup.cam.ac.uk/catalogue/email.asp?isbn=9780521882446 ) 
+
+For test results of the software and a description of the code (***this is the 
+paper you should refer to when using the code***):
+Tian, Y., G. Nolet, S.-H. Hung, R. Montelli and F.A. Dahlen, Dynamic ray 
+tracing and travel time corrections for global seismic tomography, 
+J. Comp. Physics, 226, 672-687, 2007.
+
+The crustal corrections use CRUST2.0. For this please reference:
+Bassin, C., Laske, G. and Masters, G., The Current Limits of Resolution for 
+Surface Wave Tomography in North America, EOS Trans AGU, 81, F897, 2000,
+and/or Gabi Laske's website mahi.ucsd.edu/Gabi/rem.dir/crust/crust2.html.
+
+A more extensive description of its predecessor, CRUST 5.1, can be found in: 
+Mooney, Laske and Masters, Crust 5.1: a global crustal model at 5x5 degrees, 
+JGR, 103, 727-747, 1998.
+
+Other helpful publications:
+Hung, S.-H. F.A. Dahlen and G. Nolet, Frechet kernels for finite-frequency 
+travel times - II. Examples, Geophys. J. Int., 141, 175-203, 2000.
+Nolet, G., F.A. Dahlen and R.Montelli, Traveltimes and amplitudes of seismic 
+waves: a re-assessment, in: A. Levander and G. Nolet (eds.), Array analysis 
+of broadband seismograms, AGU Monograph Ser., 37-48, 2005.
