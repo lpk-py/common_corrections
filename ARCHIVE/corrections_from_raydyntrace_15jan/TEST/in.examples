@@ -1,0 +1,5 @@
+IASP91
+3 20                    # maxarr, tdifmax
+Pshallow_diff_depth
+0                       # tableflag (0=read source/station pairs)
+Pdef

@@ -1,0 +1,5 @@
+IASP91
+3 20                    # maxarr, tdifmax
+Pup
+Pupdef
+1                       # tableflag (1=make table then quit)
