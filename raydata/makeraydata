@@ -1,5 +1,5 @@
-echo "compiling...."
-gfortran -std=legacy -o raydata raydata.f raytracesubs.f azdel.f ellip_blnk.f90 ellip.f libsun.f libtau.f
+echo "compiling raydata_testing.f ...."
+gfortran -std=legacy -o raydata raytracesubs.f azdel.f ellip_blnk.f90 ellip.f libsun.f libtau.f raydata_testing.f
 
 echo "copying...."
 cp -v raydata TEST
