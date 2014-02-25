@@ -115,6 +115,9 @@ c<ec>                                           phase identification
       NUMPH = 57
       deldst = 5.0
       abrt = .FALSE.
+      jdebug=0
+      if(jdebug.eq.1) write(13,*) 'elllip.f:',phase,edist,edepth,
+     &      ecolat,azim
 c                                             check on the length of phase
       l=len(phase)
       if(l.lt.8) then
@@ -126,6 +129,7 @@ c                                             select phase
       ip = -1
       nc=min(lnblk(phase),8)
       do 10 i=1,NUMPH
+        if(jdebug.eq.1) write(13,*) i,' ',phase(1:nc),' ',phcod(i)
         if(nc.ne.phnch(i)) goto 10
         if (phase(1:nc) .eq. phcod(i)(1:nc)) then
           ip = i
@@ -228,6 +232,7 @@ c
 *         write(6,*) "azim,caz,cbz",azim,caz,cbz    
 c
          tcor = sc0*tau0 + sc1*cos(azim)*tau1 + sc2*cos(2.0*azim)*tau2
+c        write(*,*) tcor
 c
       return
 c<ec>

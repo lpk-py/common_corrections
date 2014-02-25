@@ -19,8 +19,8 @@ fio = open(filename, 'r')
 fi = fio.readlines()
 
 line_to_start = int(raw_input('Enter the line number: (starting from 1)'))
-print int(fi[line_to_start-1])
-number_lines_2_read = int(fi[line_to_start-1])
+#print int(fi[line_to_start-1])
+number_lines_2_read = int(fi[line_to_start-1].split()[-1])
 
 # r: radius, delta: epicentral distance (radians)
 r = []

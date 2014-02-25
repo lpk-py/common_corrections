@@ -1,0 +1,38 @@
+-------------25.02.2014 (Kasra)
+* NOT CHANGED:
+azdel.f
+raytracesubs.f
+selectISC.f
+README
+ellip.f ---> MINOR differences in writing and debugging
+Examples
+
+* NEW FILES:
+README_KASRA ---> This file!
+makeraydata ---> CHANGE IT...Compile all the required libraries
+
+OBSOLETE ---> Obsolete files (not used anymore!)
+
+libsun.f       ---> BLNK ellipticity correction (from website!)
+libtau.f       ---> BLNK ellipticity correction (from website!)
+ttlim.inc      ---> BLNK ellipticity correction (from website!)
+elcordir.tbl   ---> BLNK ellipticity correction (from website!)
+ellip_blnk.f90 ---> BLNK ellipticity correction (from website!)
+
+* MODIFIED:
+raydata.f:
+- make some printings on the screen (user-friendly!)
+- Ellipticity correction using BLN Kennett's method (for Pdiff)
+- Comparison between two methods of ellipticity correction
+- Pdiff: BLNK method should be used
+Otherwise, they will be compared and if the error is more than
+10% then it will stop the program....
+- Pdiff is modeled by PPPP (to get correct lat, lon)
+we do not want to write all the corrections
+for all the legs
+here only 1, 2, 9 are written and the rest are omitted!
+- We have already considered the effects of attenuation in
+our forward modeling (YSPEC or AXISEM) ---> t*=0.
+- In case of Pdiff: We do not want to write all the sensitivity kernels
+since we are modeling Pdiff with PPPP ---> so just the first
+line

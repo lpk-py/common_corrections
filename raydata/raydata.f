@@ -234,6 +234,7 @@ c     write(6,fmt='(i8," to ",i8,2x,a26)') ndata,ndata+100,ctime(itm)
           stop 'Data file error in aobs line'
         endif  
       enddo  
+
       if(jdebug.gt.0) write(13,*) 'datum:',idate,ievt,' ',stationcode,
      &slat,slon,sdep,rlat,rlon,relev
 
@@ -277,13 +278,12 @@ c     call ellref(scolatr)
 c     call ellcor(phase,del,sdep,scolatr,az/r2d,ecorr,abrt)
 c     if(abrt) ecorr=-99.               ! if no ellipticity correction available
 
-      !!!!!!!! Kasra
-      ! scolat: should it be this and NOT scolatr?
+      ! Kasra
+      ! Ellipticity correction using BLN Kennett's method (for Pdiff)
       ! az: inside ellip_blnk it will be converted to radians
-      ! tcor should be changed to ecorr in case that it will
-      ! be used!
       call ellip_blnk(phase, del, sdep, scolat, az, tcor)
-      !!!!!!!! END Kasra
+      ! write(*,*) phase, del, sdep, scolat, az, tcor
+      ! END Kasra
       
       ! find all ray arrivals at distance del within tdifmax of first
       call findarr(del,tdifmax,ytbl,ntbl,a1,a2,d1,d2,trtime,narr)
@@ -386,15 +386,32 @@ c25    format(i6," Event nr",i8,1x,"in ",a16,1x,a3)
 c    &      kdwn,p,rayvel,rayq,ecorr2)
 c       print *,'ecorr,ecorr2=',ecorr,ecorr2
 c       write(13,*) 'ecorr,ecorr2=',ecorr,ecorr2
+        call hessian(y,ypq,nray,jsg,rseg,ktseg,kdwn,hmf,hmb,p,rayvel,
+     &      rayq)
         
-        !!!!!!!! Kasra
+        ! Kasra
+        ! Comparison between two methods of ellipticity correction
         open(33, file='ellipticity_comparison.'//dataf)
         write(33, *) tcor, ',', ecorr, ',', abs(tcor-ecorr), 
      &       ',', abs(abs(tcor-ecorr)/tcor)*100.0
-        !!!!!!!! END Kasra 
 
-        call hessian(y,ypq,nray,jsg,rseg,ktseg,kdwn,hmf,hmb,p,rayvel,
-     &      rayq)
+        ! Pdiff: BLNK method should be used 
+        ! Otherwise, they will be compared and if the error is more than
+        ! 0.1sec then it will stop the program....
+        if(phase.eq.'Pdiff') then
+          write(*,*) 'Selected phase is...', phase
+          p = 4.439*180.0/pi
+          write(*,*) 'p is set to (constant) ', p
+          ecorr = tcor
+        else
+          if (abs(tcor-ecorr).gt.0.1) then
+            write(*,*) 'Different between two methods of ellipticity'
+            write(*,*) 'correction is more than 50%'
+            stop
+          endif
+        endif
+        ! END Kasra 
+        
         call getlegs(y,rayvel,nray,legend,nlegs)
         ! correct travel time for dDelta
         trtime(iar)=y(4,nray)+p*(rdel-y(3,nray)) 
@@ -557,13 +574,32 @@ c           telev=telev+cosi*(-rcr2(1)+6371.0)/vsurf
           if(jdebug.eq.1.and.kseg.gt.1) 
      &          write(13,*) 'Incoming ref tau=',tauref
 
-90        if(kd.ne.2.and.kd.ne.4) then
-            write(2,95) kseg,kd,ptlat,ptlon,rtarget,tau,telev
-95          format(2i3,2f8.2,f8.1,2f8.3)
+          ! Kasra
+          ! Pdiff is modeled by PPPP (to get correct lat, lon)
+          ! we do not want to write all the corrections
+          ! for all the legs
+          ! here only 1, 2, 9 are written and the rest are omitted!
+90        if (phase.eq.'Pdiff') then
+            if(kd.ne.2.and.kd.ne.4) then
+              if (kseg.eq.1) then
+                write(2,95) 1,kd,ptlat,ptlon,rtarget,tau,telev
+              else if(kseg.eq.9) then
+                write(2,95) 3,kd,ptlat,ptlon,rtarget,tau,telev
+              endif
+            else if(kseg.eq.2) then
+              write(2,96) kseg,kd,0,0,rtarget,0,0
+            endif  
           else
-            write(2,96) kseg,kd,0,0,rtarget,0,0
-96          format(2i3,2i8,f8.1,2i8)
-          endif  
+            if(kd.ne.2.and.kd.ne.4) then
+              write(2,95) kseg,kd,ptlat,ptlon,rtarget,tau,telev
+            else
+              write(2,96) kseg,kd,0,0,rtarget,0,0
+            endif 
+          endif
+95        format(2i3,2f8.2,f8.1,2f8.3)
+96        format(2i3,2i8,f8.1,2i8)
+          ! END Kasra
+
           if(jdebug.eq.1)
      &      write(13,*) 'Final crustal correction:',tau,' Elev:',telev
 
@@ -575,14 +611,15 @@ c           telev=telev+cosi*(-rcr2(1)+6371.0)/vsurf
 99      write(2,96) 0,0,0,0,0.,0,0
         nray=0       ! just to be sure
         
-        !!!!!!!! Kasra
-        ! we have already considered the effects of attenuation in yspec
+        ! Kasra
+        ! We have already considered the effects of attenuation in
+        ! our forward modeling (YSPEC or AXISEM) ---> t*=0.
         ! TODO: it should be more generic! means that it can detect
-        ! whether it is yspec or any other code itself!!!!
+        ! whether it is yspec or any other code!
 !100     write(2,105) iar,nray,nlegs,trtime(iar),ecorr,tstar,qray,p
 100     write(2,105) iar,nray,nlegs,trtime(iar),ecorr,0.,qray,p
 105     format(i2,2i5,3f10.2,2e12.3)
-        !!!!!!!! END Kasra
+        ! END Kasra
 
         write(2,fmt='(20i5)') (legend(i),i=1,nlegs)
         iq=n
@@ -591,8 +628,20 @@ c           telev=telev+cosi*(-rcr2(1)+6371.0)/vsurf
           q0=rayq(i)
           h11=hmf(1,i)+hmb(1,i)
           h22=hmf(2,i)+hmb(2,i)
-          write(2,120) (y(j,i),j=1,3),c,q0,h11,h22
+          
+          ! Kasra
+          ! In case of Pdiff: We do not want to write all the sensitivity kernels
+          ! since we are modeling Pdiff with PPPP ---> so just the first
+          ! line
+          if (phase.ne.'Pdiff') then
+            write(2,120) (y(j,i),j=1,3),c,q0,h11,h22
+          else
+            if (i.eq.1) then
+              write(2,120) (y(j,i),j=1,3),c,q0,h11,h22
+            endif
+          endif
 120       format(f10.3,3f10.5,f10.6,4e14.6)
+          ! END Kasra
         enddo
 
       enddo     ! end of do loop over iar
