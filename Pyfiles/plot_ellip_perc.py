@@ -2,8 +2,10 @@
 Plot the difference between ellipticity corrections (two methods)
 '''
 import matplotlib.pyplot as plt
+import os
+import sys
 
-filename = './ellipticity_comparison.dataset1_wri'
+filename = os.path.abspath(sys.argv[1])
 
 fio = open(filename, 'r')
 fi = fio.readlines()
