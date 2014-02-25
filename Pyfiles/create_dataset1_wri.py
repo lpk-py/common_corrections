@@ -11,7 +11,7 @@ phase = 'Pdiff'
 filename = 'dataset1_wri_example'
 #------------------------------------------
 
-source = [[89., 30., 20.]]
+source = [[89., 30., 0.]]
 receiver = [[-29., 30., 0.]]
 
 

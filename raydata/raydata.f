@@ -583,6 +583,12 @@ c           telev=telev+cosi*(-rcr2(1)+6371.0)/vsurf
             if(kd.ne.2.and.kd.ne.4) then
               if (kseg.eq.1) then
                 write(2,95) 1,kd,ptlat,ptlon,rtarget,tau,telev
+                ! Kasra
+                ! Open a new file to collect the results
+                ! this is just for source information (kseg=1)
+                open(44, file='ell_ccor.'//dataf)
+                write(44, *) ptlat, ',', ptlon, ',', rtarget, ',', 
+     &           ecorr, ',', tau, ',', telev 
               else if(kseg.eq.9) then
                 write(2,95) 3,kd,ptlat,ptlon,rtarget,tau,telev
               endif
