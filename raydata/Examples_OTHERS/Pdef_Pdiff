@@ -1,0 +1,11 @@
+Pdiff                                                                       
+Pdiff       
+  6371.0    1    1  down  P
+  3480.0    2    1  turn  P
+  6371.0    3    1  refl  P
+  3480.0    2    1  turn  P
+  6371.0    3    1  refl  P
+  3480.0    2    1  turn  P
+  6371.0    3    1  refl  P
+  3480.0    2    1  turn  P
+  6371.0    5    1  end   P
