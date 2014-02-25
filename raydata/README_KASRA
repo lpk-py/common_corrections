@@ -9,7 +9,9 @@ Examples
 
 * NEW FILES:
 README_KASRA ---> This file!
-makeraydata ---> CHANGE IT...Compile all the required libraries
+Examples_Pdiff ---> Some input files for Pdiff
+makeraydata ---> Compile all the required libraries and copy one
+to Examples_Pdiff
 
 OBSOLETE ---> Obsolete files (not used anymore!)
 
@@ -26,7 +28,7 @@ raydata.f:
 - Comparison between two methods of ellipticity correction
 - Pdiff: BLNK method should be used
 Otherwise, they will be compared and if the error is more than
-10% then it will stop the program....
+0.1sec then it will stop the program....
 - Pdiff is modeled by PPPP (to get correct lat, lon)
 we do not want to write all the corrections
 for all the legs
