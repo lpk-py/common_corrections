@@ -180,6 +180,11 @@ c    &      form='formatted')
       ! read ray info from the raw data file, write it to the processed file
       call rdray(3,2,chray,phase,rseg,ktseg,kdwn,nseg)
       write(4,'(5a)') 'Phase: ',phase,' (',chray,')'
+      
+      if (phase.eq.'Pdiff') then
+          write(*,*) 'Selected phase is...', phase
+          write(*,*) 'p is set to (constant) ', 4.439*180.0/pi
+      endif
 
       print *,'==========================='
       print *, 'Read the filters....'
@@ -399,9 +404,9 @@ c       write(13,*) 'ecorr,ecorr2=',ecorr,ecorr2
         ! Otherwise, they will be compared and if the error is more than
         ! 0.1sec then it will stop the program....
         if(phase.eq.'Pdiff') then
-          write(*,*) 'Selected phase is...', phase
+          !write(*,*) 'Selected phase is...', phase
           p = 4.439*180.0/pi
-          write(*,*) 'p is set to (constant) ', p
+          !write(*,*) 'p is set to (constant) ', p
           ecorr = tcor
         else
           if (abs(tcor-ecorr).gt.0.1) then

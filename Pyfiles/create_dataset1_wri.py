@@ -11,9 +11,17 @@ phase = 'Pdiff'
 filename = 'dataset1_wri_example'
 #------------------------------------------
 
-source = [[89., 30., 0.]]
-receiver = [[-29., 30., 0.]]
+# Example 1:
+#source = [[89., 30., 0.]]
+#receiver = [[-29., 30., 0.]]
 
+# Example 2:
+source = []
+receiver = []
+for i in range(-89, 90):
+    for j in range(-179, 179):
+        source.append([i, j, 0])
+        receiver.append([0, 0, 0])
 
 if os.path.exists(os.path.join('.', filename)):
     sys.exit('ERROR: %s exists' %(filename))
