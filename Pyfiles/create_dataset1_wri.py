@@ -2,6 +2,8 @@
 Goal: Create dataset1_wri for testing purposes
 '''
 
+import numpy as np
+from obspy.core.util import locations2degrees
 import os
 import sys
 import utils
@@ -11,6 +13,9 @@ phase = 'Pdiff'
 filename = 'dataset1_wri_example'
 #------------------------------------------
 
+if os.path.exists(os.path.join('.', filename)):
+    sys.exit('ERROR: %s exists' %(filename))
+
 # Example 1:
 #source = [[89., 30., 0.]]
 #receiver = [[-29., 30., 0.]]
@@ -19,12 +24,17 @@ filename = 'dataset1_wri_example'
 source = []
 receiver = []
 for i in range(-89, 90):
-    for j in range(-179, 179):
+    for j in range(-179, 180):
+        rela = 0.; relo = 0.
+        #flag = False
         source.append([i, j, 0])
-        receiver.append([0, 0, 0])
-
-if os.path.exists(os.path.join('.', filename)):
-    sys.exit('ERROR: %s exists' %(filename))
+        while not 100.0 < locations2degrees(i, j, rela, relo) < 150.0:
+            #print '.',
+            #flag = True
+            rela = np.random.uniform(-89, 89)
+            relo = np.random.uniform(-179, 179)
+        #if flag: print '\n'
+        receiver.append([rela, relo, 0])
 
 # Creating the header (wave definition + filters)
 comp_header = utils.dataset_header(phase, filename)
