@@ -409,9 +409,10 @@ c       write(13,*) 'ecorr,ecorr2=',ecorr,ecorr2
           !write(*,*) 'p is set to (constant) ', p
           ecorr = tcor
         else
+          ecorr = tcor
           if (abs(tcor-ecorr).gt.0.1) then
             write(*,*) 'Different between two methods of ellipticity'
-            write(*,*) 'correction is more than 50%'
+            write(*,*) 'correction is more than 0.1sec'
             stop
           endif
         endif
@@ -602,6 +603,14 @@ c           telev=telev+cosi*(-rcr2(1)+6371.0)/vsurf
             endif  
           else
             if(kd.ne.2.and.kd.ne.4) then
+              if (kseg.eq.1) then
+                ! Kasra
+                ! Open a new file to collect the results
+                ! this is just for source information (kseg=1)
+                open(44, file='ell_ccor.'//dataf)
+                write(44, *) ptlat, ',', ptlon, ',', rtarget, ',', 
+     &           ecorr, ',', tau, ',', telev 
+              endif
               write(2,95) kseg,kd,ptlat,ptlon,rtarget,tau,telev
             else
               write(2,96) kseg,kd,0,0,rtarget,0,0

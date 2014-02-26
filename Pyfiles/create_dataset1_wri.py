@@ -21,20 +21,54 @@ if os.path.exists(os.path.join('.', filename)):
 #receiver = [[-29., 30., 0.]]
 
 # Example 2:
+# used for Pdiff crustal correction map
+#source = []
+#receiver = []
+#for i in range(-89, 90):
+#    for j in range(-179, 180):
+#        rela = 0.; relo = 0.
+#        #flag = False
+#        source.append([i, j, 0.0])
+#        while not 100.0 < locations2degrees(i, j, rela, relo) < 150.0:
+#            #print '.',
+#            #flag = True
+#            rela = np.random.uniform(-89, 89)
+#            relo = np.random.uniform(-179, 179)
+#        #if flag: print '\n'
+#        receiver.append([rela, relo, 0.0])
+
+# Example 3
+#source = []
+#receiver = []
+#for i in range(-10, -90, -1):
+#    receiver.append([i, 10.0, 0.0])
+#    source.append([90.0, 10.0, 0.0])
+#source = []
+#receiver = []
+#for i in range(60, -10, -1):
+#    receiver.append([i, 10.0, 0.0])
+#    source.append([90.0, 10.0, 0.0])
+
+# Example 4
+#source = []
+#receiver = []
+#for i in range(30, 100, 1):
+#    receiver.append([0.0, i, 0.0])
+#    source.append([0.0, 0.0, 0.0])
+#for i in range(100, 180, 1):
+#    receiver.append([0.0, i, 0.0])
+#    source.append([0.0, 0.0, 0.0])
+
+# Example 5
 source = []
 receiver = []
-for i in range(-89, 90):
-    for j in range(-179, 180):
-        rela = 0.; relo = 0.
-        #flag = False
-        source.append([i, j, 0])
-        while not 100.0 < locations2degrees(i, j, rela, relo) < 150.0:
-            #print '.',
-            #flag = True
-            rela = np.random.uniform(-89, 89)
-            relo = np.random.uniform(-179, 179)
-        #if flag: print '\n'
-        receiver.append([rela, relo, 0])
+#for i in range(30, 90, 1):
+#    receiver.append([i, 0.0, 0.0])
+#    source.append([0.0, 0.0, 0.0])
+for i in range(80, 0, -1):
+    receiver.append([i, 180.0, 0.0])
+    source.append([0.0, 0.0, 0.0])
+
 
 # Creating the header (wave definition + filters)
 comp_header = utils.dataset_header(phase, filename)
