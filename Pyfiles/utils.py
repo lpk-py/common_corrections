@@ -412,10 +412,12 @@ def source_receiver(source, receiver):
 
     srv = []
     for i in range(len(source)):
-        srv.append('20%s %s %s 1 S%s N%s BHZ %s %s %s %s %s %s 1 0 0'
+        srv.append('20%s %s %s 1 S%s N%s BHZ %s %s %s %s %s %s 3 0 0'
                     %(i, i, i, i, i, 
                         source[i][0], source[i][1], source[i][2], 
                         receiver[i][0], receiver[i][1], receiver[i][2]))
         srv.append('1  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0')
         srv.append('    100  0.9  0.9  1  57.30')
+        srv.append('    100  0.9  0.9  3  30.30')
+        srv.append('    100  0.9  0.9  4  22.40')
     return srv

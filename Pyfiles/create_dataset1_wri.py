@@ -9,7 +9,7 @@ import sys
 import utils
 
 #-----------------INPUT--------------------
-phase = 'Pdiff'
+phase = 'P'
 filename = 'dataset1_wri_example'
 #------------------------------------------
 
@@ -17,8 +17,8 @@ if os.path.exists(os.path.join('.', filename)):
     sys.exit('ERROR: %s exists' %(filename))
 
 # Example 1:
-#source = [[89., 30., 0.]]
-#receiver = [[-29., 30., 0.]]
+source = [[90., 0., 0.]]
+receiver = [[20., -100., 0.]]
 
 # Example 2:
 # used for Pdiff crustal correction map
@@ -60,14 +60,14 @@ if os.path.exists(os.path.join('.', filename)):
 #    source.append([0.0, 0.0, 0.0])
 
 # Example 5
-source = []
-receiver = []
-#for i in range(30, 90, 1):
-#    receiver.append([i, 0.0, 0.0])
+#source = []
+#receiver = []
+##for i in range(30, 90, 1):
+##    receiver.append([i, 0.0, 0.0])
+##    source.append([0.0, 0.0, 0.0])
+#for i in range(80, 0, -1):
+#    receiver.append([i, 180.0, 0.0])
 #    source.append([0.0, 0.0, 0.0])
-for i in range(80, 0, -1):
-    receiver.append([i, 180.0, 0.0])
-    source.append([0.0, 0.0, 0.0])
 
 
 # Creating the header (wave definition + filters)
