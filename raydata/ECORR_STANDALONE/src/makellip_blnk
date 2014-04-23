@@ -1,0 +1,3 @@
+gfortran -std=legacy -o ecorr_blnk -g elcorr_file.f90 ellip_blnk.f90 ellip.f libsun.f libtau.f
+
+cp ecorr_blnk ..
