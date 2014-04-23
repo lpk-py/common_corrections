@@ -17,8 +17,32 @@ if os.path.exists(os.path.join('.', filename)):
     sys.exit('ERROR: %s exists' %(filename))
 
 # Example 1:
-source = [[90., 0., 0.]]
-receiver = [[20., -100., 0.]]
+#source = [[90., 0., 100.]]
+#receiver = [[30., 0., 0.]]
+
+# Example tomo:
+# used for P crustal correction map
+#source = []
+#receiver = []
+#counter = 1 
+#counter_limit = 100
+#for i in range(-90, 90, 20):
+#    for j in range(-179, 180, 20):
+#        rela = 0.; relo = 0.
+#        #flag = False
+#        source.append([i, j, 10.0])
+#        while not 40.0 < locations2degrees(i, j, rela, relo) < 80.0:
+#            #print '.',
+#            #flag = True
+#            rela = np.random.uniform(-89, 89)
+#            relo = np.random.uniform(-179, 179)
+#        #if flag: print '\n'
+#        receiver.append([rela, relo, 0.0])
+#        counter += 1
+#    print counter,
+#    if counter > counter_limit:
+#        print "# receiver/source pairs: %s - %s" %(len(receiver), len(source))
+#        break
 
 # Example 2:
 # used for Pdiff crustal correction map
@@ -50,11 +74,11 @@ receiver = [[20., -100., 0.]]
 #    source.append([90.0, 10.0, 0.0])
 
 # Example 4
-#source = []
-#receiver = []
-#for i in range(30, 100, 1):
-#    receiver.append([0.0, i, 0.0])
-#    source.append([0.0, 0.0, 0.0])
+source = []
+receiver = []
+for i in range(32, 90, 1):
+    receiver.append([0.0, i, 0.0])
+    source.append([0.0, 0.0, 0.0])
 #for i in range(100, 180, 1):
 #    receiver.append([0.0, i, 0.0])
 #    source.append([0.0, 0.0, 0.0])
