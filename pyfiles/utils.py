@@ -1,11 +1,16 @@
+"""
+Utility functions for create_dataset1_wri
+"""
 import sys
 
 
 ################ dataset_header #####################
+
+
 def dataset_header(phase, filename_io):
-    '''
+    """
     Includes correct header for dataset file!
-    '''
+    """
 
     pdiff_header = filename_io + \
 '''
@@ -401,21 +406,22 @@ P
         complete_header = pdiff_header + filters
         return complete_header
     else:
-        print 'Invalid phase! %s' %(phase)
+        print 'Invalid phase! %s' % phase
         sys.exit(1)
 
 ################### source_receiver ##########################
+
+
 def source_receiver(source, receiver):
-    '''
+    """
     Create required lines for source and receiver
-    '''
+    """
 
     srv = []
     for i in range(len(source)):
         srv.append('20%s %s %s 1 S%s N%s BHZ %s %s %s %s %s %s 8 0 0'
-                    %(i, i, i, i, i, 
-                        source[i][0], source[i][1], source[i][2], 
-                        receiver[i][0], receiver[i][1], receiver[i][2]))
+                   % (i, i, i, i, i, source[i][0], source[i][1], source[i][2], receiver[i][0], receiver[i][1],
+                      receiver[i][2]))
         srv.append('1  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0  0.0')
         srv.append('    100  0.9  0.9  1  65.1')
         srv.append('    100  0.9  0.9  2  46.2')

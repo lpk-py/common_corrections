@@ -1,6 +1,7 @@
-'''
+"""
 Plot the difference between ellipticity corrections (two methods)
-'''
+"""
+
 import matplotlib.pyplot as plt
 import os
 import sys
